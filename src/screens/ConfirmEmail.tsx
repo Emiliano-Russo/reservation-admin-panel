@@ -1,41 +1,94 @@
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { MailService } from "../services/mail.service";
-import { useEffect } from "react";
-import { message } from "antd";
+import { message, Spin, Result, Button } from "antd";
 
-const mailServie = new MailService(process.env.REACT_APP_BACKEND_URL!);
+const mailService = new MailService(process.env.REACT_APP_BACKEND_URL!);
+
+type Phase = "loading" | "error" | "success";
 
 export const ConfirmEmail = () => {
-  // Usar el hook useLocation para obtener el objeto location
-  const location = useLocation();
+  const [transaction, setTransaction] = useState<Phase>("loading");
 
-  // Usar URLSearchParams para obtener el token de la cadena de consulta
+  const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const token = queryParams.get("token");
 
-  console.log("Token: ", token);
-
   const sendToken = async () => {
-    console.log("sending token...");
-    if (token != null)
-      mailServie
-        .confirmEmail(token)
-        .then((val) => {
-          message.success("Mail confimado!");
-        })
-        .catch((err) => {
-          message.error("Error al confirmar");
-        });
+    if (token != null) {
+      try {
+        await mailService.confirmEmail(token);
+        message.success("Mail Confirmado!");
+        setTransaction("success");
+      } catch (err) {
+        message.error("Error al confirmar");
+        setTransaction("error");
+      }
+    } else {
+      setTransaction("error");
+    }
   };
 
   useEffect(() => {
     sendToken();
   }, []);
 
+  if (transaction === "loading") {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <h1>Cargando</h1>
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  if (transaction === "error") {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Result
+          status="error"
+          title="¡Algo salió mal!"
+          subTitle="El enlace que utilizaste es demasiado antiguo. Por favor, intenta reenviar el correo desde la aplicación para obtener un enlace más reciente."
+        />
+      </div>
+    );
+  }
+
   return (
-    <>
-      <h1>Confirm Email</h1>
-      {token}
-    </>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      <Result
+        status="success"
+        title="¡Correo confirmado con éxito!"
+        subTitle="Gracias por confirmar tu dirección de correo electrónico. Ahora puedes continuar utilizando nuestra plataforma."
+        extra={[
+          <Button type="primary" key="console">
+            Ir al inicio
+          </Button>,
+          // Add any other buttons or actions you might want here
+        ]}
+      />
+    </div>
   );
 };
