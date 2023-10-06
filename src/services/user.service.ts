@@ -5,7 +5,7 @@ export class UserService {
   private api: any;
   constructor(private baseUrl: string) {
     this.api = axios.create({
-      baseURL: `${baseUrl}`, //http://localhost:3001
+      baseURL: `${baseUrl}/api`, // Añade el prefijo '/api'
     });
   }
 

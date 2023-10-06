@@ -5,7 +5,7 @@ export class MailService {
 
   constructor(private baseUrl: string) {
     this.api = axios.create({
-      baseURL: `${baseUrl}/mail`, // Añadimos el prefijo '/mail' ya que tu controlador tiene ese prefijo
+      baseURL: `${baseUrl}/api/mail`, // Añade el prefijo '/api'
     });
   }
 
