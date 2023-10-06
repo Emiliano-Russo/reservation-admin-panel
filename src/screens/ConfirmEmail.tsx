@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { MailService } from "../services/mail.service";
 import { message, Spin, Result, Button } from "antd";
+import { Header } from "../components/Header";
 
 const mailService = new MailService(process.env.REACT_APP_BACKEND_URL!);
 
@@ -11,6 +12,7 @@ export const ConfirmEmail = () => {
   const [transaction, setTransaction] = useState<Phase>("loading");
 
   const location = useLocation();
+  const nav = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const token = queryParams.get("token");
 
@@ -35,60 +37,66 @@ export const ConfirmEmail = () => {
 
   if (transaction === "loading") {
     return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <h1>Cargando</h1>
-        <Spin size="large" />
-      </div>
+      <>
+        <Header />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <h1>Cargando</h1>
+          <Spin size="large" />
+        </div>
+      </>
     );
   }
 
   if (transaction === "error") {
     return (
+      <>
+        <Header />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Result
+            status="error"
+            title="¡Algo salió mal!"
+            subTitle="El enlace que utilizaste es demasiado antiguo. Por favor, intenta reenviar el correo desde la aplicación para obtener un enlace más reciente."
+          />
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <Header />
       <div
         style={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "100vh",
         }}
       >
         <Result
-          status="error"
-          title="¡Algo salió mal!"
-          subTitle="El enlace que utilizaste es demasiado antiguo. Por favor, intenta reenviar el correo desde la aplicación para obtener un enlace más reciente."
+          status="success"
+          title="¡Correo confirmado con éxito!"
+          subTitle="Gracias por confirmar tu dirección de correo electrónico. Ahora puedes continuar utilizando nuestra plataforma."
+          extra={[
+            <Button type="primary" key="console" onClick={() => nav("/")}>
+              Ir al inicio
+            </Button>,
+            // Add any other buttons or actions you might want here
+          ]}
         />
       </div>
-    );
-  }
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      <Result
-        status="success"
-        title="¡Correo confirmado con éxito!"
-        subTitle="Gracias por confirmar tu dirección de correo electrónico. Ahora puedes continuar utilizando nuestra plataforma."
-        extra={[
-          <Button type="primary" key="console">
-            Ir al inicio
-          </Button>,
-          // Add any other buttons or actions you might want here
-        ]}
-      />
-    </div>
+    </>
   );
 };
