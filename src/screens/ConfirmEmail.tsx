@@ -5,7 +5,7 @@ import { message, Spin, Result, Button } from "antd";
 import { Header } from "../components/Header";
 
 // const mailService = new MailService('');
-const mailService = new MailService("https://www.agendafacil.org");
+const mailService = new MailService("https://backend.agendafacil.org");
 
 type Phase = "loading" | "error" | "success";
 
