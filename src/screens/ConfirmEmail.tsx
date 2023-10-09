@@ -4,7 +4,8 @@ import { MailService } from "../services/mail.service";
 import { message, Spin, Result, Button } from "antd";
 import { Header } from "../components/Header";
 
-const mailService = new MailService(process.env.REACT_APP_BACKEND_URL!);
+// const mailService = new MailService('');
+const mailService = new MailService("https://www.agendafacil.org");
 
 type Phase = "loading" | "error" | "success";
 
