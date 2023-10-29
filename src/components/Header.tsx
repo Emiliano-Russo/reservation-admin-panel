@@ -7,6 +7,7 @@ export const Header = () => {
         background: "#ffa500",
         display: "flex",
         justifyContent: "center",
+        width: "100%",
       }}
     >
       <img
