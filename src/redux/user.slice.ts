@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IUser } from "../interfaces/user.interface";
+import { IUser } from "../interfaces/user/user.interface";
 
 interface UpdateStringPropertyAction {
   property:
@@ -40,10 +40,7 @@ const userSlice = createSlice({
   name: "user",
   initialState: initialStateUser(),
   reducers: {
-    addUserAndToken(
-      state,
-      action: PayloadAction<{ user: IUser; token: string }>
-    ) {
+    addUserAndToken(state, action: PayloadAction<{ user: IUser; token: string }>) {
       localStorage.setItem("user", JSON.stringify(action.payload.user));
       localStorage.setItem("token", action.payload.token);
       return {
@@ -69,10 +66,7 @@ const userSlice = createSlice({
         token: null,
       };
     },
-    updateStringProperty(
-      state,
-      action: PayloadAction<UpdateStringPropertyAction>
-    ) {
+    updateStringProperty(state, action: PayloadAction<UpdateStringPropertyAction>) {
       if (action.payload.property === "token") {
         localStorage.setItem("token", action.payload.value);
         return {
@@ -94,10 +88,5 @@ const userSlice = createSlice({
   },
 });
 
-export const {
-  addUserAndToken,
-  removeUserAndToken,
-  updateStringProperty,
-  addUser,
-} = userSlice.actions;
+export const { addUserAndToken, removeUserAndToken, updateStringProperty, addUser } = userSlice.actions;
 export default userSlice.reducer;
