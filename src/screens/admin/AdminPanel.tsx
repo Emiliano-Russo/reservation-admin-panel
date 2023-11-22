@@ -184,7 +184,9 @@ export const AdminPanel = () => {
         <Button loading={loading} type="primary" style={{ marginTop: "10px" }} onClick={() => getUsers()}>
           Buscar
         </Button>
-
+        <p>
+          Total: {users && users.total} / Last Page: {users && users.lastPage}
+        </p>
         <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
           {users == undefined
             ? null
