@@ -10,16 +10,13 @@ export const Home = () => {
       <Header />
       <div style={{ padding: "5%", textAlign: "center" }}>
         <Paragraph>
-          Bienvenido a <strong>Agenda Fácil</strong>, la solución definitiva
-          para programar y gestionar tus citas y eventos con facilidad. Olvídate
-          del estrés y deja que nosotros te ayudemos a organizar tu día a día.
+          Bienvenido a <strong>Agenda Fácil</strong>, la solución definitiva para programar y gestionar tus citas y
+          eventos con facilidad. Olvídate del estrés y deja que nosotros te ayudemos a organizar tu día a día.
         </Paragraph>
         <Divider />
         <Paragraph>
-          Con nuestra herramienta intuitiva, puedes programar, reprogramar o
-          cancelar citas en cuestión de segundos. Ya sea para negocios, salud o
-          cualquier otro tipo de evento, Agenda Fácil está aquí para simplificar
-          tu vida.
+          Con nuestra herramienta intuitiva, puedes programar, reprogramar o cancelar citas en cuestión de segundos. Ya
+          sea para negocios, salud o cualquier otro tipo de evento, Agenda Fácil está aquí para simplificar tu vida.
         </Paragraph>
         <div
           style={{
@@ -31,7 +28,7 @@ export const Home = () => {
         >
           <Button
             style={{
-              width: "220px",
+              width: "240px",
               marginTop: "20px",
               textAlign: "start",
               background: "#007AFF",
@@ -48,7 +45,7 @@ export const Home = () => {
           </Button>
           <Button
             style={{
-              width: "220px",
+              width: "240px",
               marginTop: "10px",
               textAlign: "start",
               background: "#3DDC84",
@@ -56,8 +53,7 @@ export const Home = () => {
             }}
             icon={<AndroidFilled />}
             onClick={() =>
-              (window.location.href = process.env
-                .REACT_APP_ANDROID_DOWNLOAD_LINK
+              (window.location.href = process.env.REACT_APP_ANDROID_DOWNLOAD_LINK
                 ? process.env.REACT_APP_ANDROID_DOWNLOAD_LINK
                 : "http://www.android.com")
             }

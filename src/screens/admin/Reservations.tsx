@@ -12,21 +12,26 @@ export const Reservations = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const location = useLocation();
   const user = location.state?.user;
   console.log("user! ", user);
 
   const findReservations = async () => {
+    setLoading(true);
     reservationService
       .getReservationsByUserId(user.id, { limit: limit, page: page }, search)
       .then((res) => {
         console.log("RES RESERVATION: ", res);
         setReservations(res);
-        message.success("reservations loaded");
+        message.success("Reservas Traidas");
       })
       .catch((err) => {
-        message.error("error loading reservations");
+        message.error("Error");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -52,7 +57,17 @@ export const Reservations = () => {
       <h1>
         Reservas de <strong>{user.name}</strong>
       </h1>
-      <div style={{ background: "whitesmoke", display: "flex", padding: "20px", marginBottom: "10px" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          flexWrap: "wrap",
+          justifyContent: "space-around",
+          width: "80%",
+          marginBottom: "20px",
+        }}
+      >
         <div>
           <p>Page</p>
           <Input value={page} onChange={(e) => setPage(parseInt(e.target.value))} />
@@ -66,12 +81,12 @@ export const Reservations = () => {
           <Input value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
       </div>
-      <Button type="primary" onClick={findReservations}>
+      <Button loading={loading} type="primary" onClick={findReservations}>
         Buscar
       </Button>
       <main>
         {reservations == undefined ? (
-          <h3>Undefined</h3>
+          <h3>...</h3>
         ) : (
           reservations.items.map((reserv) => {
             return (

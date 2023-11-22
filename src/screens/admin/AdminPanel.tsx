@@ -1,7 +1,7 @@
 import { Button, Input, Pagination, message, Select } from "antd";
 import { useEffect, useState } from "react";
 import { UserService } from "../../services/user.service";
-import { UserCard } from "../../components/User";
+import { UserCard } from "./UserCard";
 import { IUser } from "../../interfaces/user/user.interface";
 import { PaginatedResponse } from "../../interfaces/pagination.dto";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +25,7 @@ export const AdminPanel = () => {
   const [country, setCountry] = useState("Uruguay");
   const [searchTerm, setSearchTerm] = useState("");
   const [usersCount, setUsersCount] = useState<UserCount[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // Verificar si el token ya está en localStorage al cargar el componente
@@ -69,6 +70,7 @@ export const AdminPanel = () => {
   }
 
   const getUsers = async () => {
+    setLoading(true);
     userService
       .getUsers({ country: country, limit: limit, page: page, searchTerm: searchTerm })
       .then((res) => {
@@ -79,6 +81,9 @@ export const AdminPanel = () => {
       .catch((err) => {
         console.log("error: ", err);
         message.error("error al traer usuarios");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -89,17 +94,27 @@ export const AdminPanel = () => {
       <div style={{ marginBottom: "20px" }}>
         {usersCount.length === 0 ? (
           <Button
+            loading={loading}
             onClick={() => {
-              userService.getAmoutUsers().then((res) => {
-                console.log("res: ", res.data);
-                setUsersCount(res.data);
-              });
+              setLoading(true);
+              userService
+                .getAmoutUsers()
+                .then((res) => {
+                  console.log("res: ", res.data);
+                  setUsersCount(res.data);
+                })
+                .catch(() => {
+                  message.error("error al traer estadisticas");
+                })
+                .finally(() => {
+                  setLoading(false);
+                });
             }}
           >
             Mostrar Estadisticas
           </Button>
         ) : (
-          <>
+          <div style={{ padding: "20px" }}>
             <h2>Conteo de Usuarios por País y Departamento</h2>
             <div>
               {usersCount.map((count) => (
@@ -110,26 +125,17 @@ export const AdminPanel = () => {
                 </div>
               ))}
             </div>
-          </>
+          </div>
         )}
       </div>
-      <div
-        style={{
-          border: "1px solid green",
-          padding: "20px",
-          borderRadius: 10,
-          width: "80%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <div className="admin-controls">
         <h1>Usuarios</h1>
         <div
           style={{
             display: "flex",
+            flexDirection: "row",
             alignItems: "center",
+            flexWrap: "wrap",
             justifyContent: "space-around",
             width: "80%",
             marginBottom: "20px",
@@ -175,7 +181,7 @@ export const AdminPanel = () => {
             <Input style={{ width: 100 }} placeholder="Page" value={page} onChange={(e) => setPage(e.target.value)} />
           </div>
         </div>
-        <Button type="primary" style={{ marginTop: "10px" }} onClick={() => getUsers()}>
+        <Button loading={loading} type="primary" style={{ marginTop: "10px" }} onClick={() => getUsers()}>
           Buscar
         </Button>
 
